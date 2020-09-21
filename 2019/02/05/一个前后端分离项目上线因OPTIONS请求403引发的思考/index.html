@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="http," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在上线Vue+Vue Router(history模式)的前后端分离项目时，发现所有的 预检请求（preflight request）都403报错。然而后端反馈已经添加注解允许跨域（具体如何操作，本文暂不描述，可以去自行搜索）。于是排查是否是nginx不支持options请求，并成功定位问题。 于是思考如何避免这个问题：   不使用跨域    不发送options预检请求    最后商量决定使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个因为前后端分离项目上线因OPTIONS请求403引发的思考">
+<meta property="og:url" content="https://xiangzhipeng.top/2019/02/05/%E4%B8%80%E4%B8%AA%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%E4%B8%8A%E7%BA%BF%E5%9B%A0OPTIONS%E8%AF%B7%E6%B1%82403%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83/index.html">
+<meta property="og:site_name" content="项志鹏的博客">
+<meta property="og:description" content="最近在上线Vue+Vue Router(history模式)的前后端分离项目时，发现所有的 预检请求（preflight request）都403报错。然而后端反馈已经添加注解允许跨域（具体如何操作，本文暂不描述，可以去自行搜索）。于是排查是否是nginx不支持options请求，并成功定位问题。 于是思考如何避免这个问题：   不使用跨域    不发送options预检请求    最后商量决定使">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-05T11:55:00.000Z">
+<meta property="article:modified_time" content="2020-09-21T11:28:17.641Z">
+<meta property="article:author" content="项志鹏">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://xiangzhipeng.top/2019/02/05/一个前后端分离项目上线因OPTIONS请求403引发的思考/"/>
+
+
+
+
+
+  <title>一个因为前后端分离项目上线因OPTIONS请求403引发的思考 | 项志鹏的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?04fcda1257c372a3f251f9471f9a1dfc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">项志鹏的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">山高自有客行路，水深自有渡船人。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-主页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            主页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章归档">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            文章归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-所有标签">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            所有标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            文章分类
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://xiangzhipeng.top/2019/02/05/%E4%B8%80%E4%B8%AA%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%E4%B8%8A%E7%BA%BF%E5%9B%A0OPTIONS%E8%AF%B7%E6%B1%82403%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="项志鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="项志鹏的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一个因为前后端分离项目上线因OPTIONS请求403引发的思考</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-02-05T19:55:00+08:00">
+                2019-02-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在上线Vue+Vue Router(history模式)的前后端分离项目时，发现所有的 预检请求（preflight request）都403报错。然而后端反馈已经添加注解允许跨域（具体如何操作，本文暂不描述，可以去自行搜索）。于是排查是否是nginx不支持options请求，并成功定位问题。</p>
+<p>于是思考如何避免这个问题：</p>
+<ul>
+<li><ol>
+<li>不使用跨域</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>不发送options预检请求</li>
+</ol>
+</li>
+</ul>
+<p>最后商量决定使用第二张方法。</p>
+<p>下面总结一下 关于options 请求的一些http知识，这些在<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS" target="_blank" rel="noopener">MDN</a>上有具体描述。我只描述一些个人理解。</p>
+<p>浏览器为什么要发送预检请求<br>规范要求，对那些可能对服务器数据产生副作用的 HTTP 请求方法（特别是 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/GET" target="_blank" rel="noopener">GET</a> 以外的 HTTP 请求，或者搭配某些 MIME 类型的 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/POST" target="_blank" rel="noopener">POST</a> 请求），浏览器必须首先使用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/OPTIONS" target="_blank" rel="noopener">OPTIONS</a> 方法发起一个预检请求（preflight request），从而获知服务端是否允许该跨域请求。服务器确认允许之后，才发起实际的 HTTP 请求。在预检请求的返回中，服务器端也可以通知客户端，是否需要携带身份凭证（包括 Cookies 和 HTTP 认证相关数据）。</p>
+<p>CORS请求失败会产生错误，但是为了安全，在JavaScript代码层面是无法获知到底具体是哪里出了问题。你只能查看浏览器的控制台以得知具体是哪里出现了错误。</p>
+<p>什么情况下发送预检请求<br>关于这个问题，我们要首先知道什么叫 <strong>简单请求</strong></p>
+<h4 id="使用下列方法之一："><a href="#使用下列方法之一：" class="headerlink" title="使用下列方法之一："></a>使用下列方法之一：</h4><ul>
+<li>GET</li>
+<li>HEAD</li>
+<li>POST</li>
+</ul>
+<h4 id="Fetch-规范定义了对-CORS-安全的首部字段集合，不得人为设置该集合之外的其他首部字段。该集合为："><a href="#Fetch-规范定义了对-CORS-安全的首部字段集合，不得人为设置该集合之外的其他首部字段。该集合为：" class="headerlink" title="Fetch 规范定义了对 CORS 安全的首部字段集合，不得人为设置该集合之外的其他首部字段。该集合为："></a>Fetch 规范定义了<a href="https://fetch.spec.whatwg.org/#cors-safelisted-request-header" target="_blank" rel="noopener">对 CORS 安全的首部字段集合</a>，不得人为设置该集合之外的其他首部字段。该集合为：</h4><ul>
+<li>Accept</li>
+<li>Accept-Language</li>
+<li>Content-Language</li>
+<li>Content-Type （需要注意额外的限制）</li>
+<li>DPR</li>
+<li>Downlink</li>
+<li>Save-Data</li>
+<li>Viewport-Width</li>
+<li>Width</li>
+</ul>
+<h4 id="Content-Type-的值仅限于下列三者之一："><a href="#Content-Type-的值仅限于下列三者之一：" class="headerlink" title="Content-Type 的值仅限于下列三者之一："></a>Content-Type 的值仅限于下列三者之一：</h4><ul>
+<li>text/plain</li>
+<li>multipart/form-data</li>
+<li>application/x-www-form-urlencoded</li>
+</ul>
+<p>请求中的任意XMLHttpRequestUpload 对象均没有注册任何事件监听器；XMLHttpRequestUpload 对象可以使用 XMLHttpRequest.upload 属性访问。</p>
+<p>请求中没有使用 ReadableStream 对象。</p>
+<p>那么对于一个简单请求，浏览器则不会发送一个预检请求来测试服务器是否允许本次跨域。</p>
+<p>那么问题则变成把请求变成简单请求，即满足上述要求。</p>
+<p>如果一个请求不是简单请求并且满足下述任一个条件时，浏览器都会发送 OPTIONS 预检请求。</p>
+<h4 id="使用了下面任一-HTTP-方法："><a href="#使用了下面任一-HTTP-方法：" class="headerlink" title="使用了下面任一 HTTP 方法："></a>使用了下面任一 HTTP 方法：</h4><ul>
+<li>PUT</li>
+<li>DELETE</li>
+<li>CONNECT</li>
+<li>OPTIONS</li>
+<li>TRACE</li>
+<li>PATCH</li>
+</ul>
+<h4 id="人为设置了对-CORS-安全的首部字段集合之外的其他首部字段。该集合为："><a href="#人为设置了对-CORS-安全的首部字段集合之外的其他首部字段。该集合为：" class="headerlink" title="人为设置了对 CORS 安全的首部字段集合之外的其他首部字段。该集合为："></a>人为设置了对 CORS 安全的首部字段集合之外的其他首部字段。该集合为：</h4><ul>
+<li><p>Accept</p>
+</li>
+<li><p>Accept-Language</p>
+</li>
+<li><p>Content-Language</p>
+</li>
+<li><p>Content-Type (but note the additional requirements below)</p>
+</li>
+<li><p>DPR</p>
+</li>
+<li><p>Downlink</p>
+</li>
+<li><p>Save-Data</p>
+</li>
+<li><p>Viewport-Width</p>
+</li>
+<li><p>Width</p>
+<h4 id="Content-Type-的值不属于下列之一"><a href="#Content-Type-的值不属于下列之一" class="headerlink" title="Content-Type 的值不属于下列之一:"></a>Content-Type 的值不属于下列之一:</h4></li>
+<li><p>application/x-www-form-urlencoded</p>
+</li>
+<li><p>multipart/form-data</p>
+</li>
+<li><p>text/plain</p>
+</li>
+<li><p>请求中的XMLHttpRequestUpload 对象注册了任意多个事件监听器。</p>
+</li>
+<li><p>请求中使用了ReadableStream对象。</p>
+</li>
+</ul>
+<p><a href="https://fetch.spec.whatwg.org/#cors-safelisted-request-header" target="_blank" rel="noopener">CORS 安全的首部字段集合</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/08/%E6%98%8E%E6%9C%9D%E9%82%A3%E4%BA%9B%E4%BA%8B/%E7%AC%AC7%E9%83%A8%EF%BC%9A%E5%A4%A7%E7%BB%93%E5%B1%80%20%E5%90%8E%E8%AE%B0%E3%80%90%E6%98%8E%E6%9C%9D%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF%E3%80%91/" rel="next" title="第7部：大结局 后记【明朝那些事儿】">
+                <i class="fa fa-chevron-left"></i> 第7部：大结局 后记【明朝那些事儿】
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/15/style-resouce%E4%BB%8B%E7%BB%8D/" rel="prev" title="不用在每个文件中用@import引入样式变量或混入了！这里有更好的办法：@nuxtjs/style-resources">
+                不用在每个文件中用@import引入样式变量或混入了！这里有更好的办法：@nuxtjs/style-resources <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">项志鹏</p>
+              <p class="site-description motion-element" itemprop="description">欢迎来到项志鹏的个人博客。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">179</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用下列方法之一："><span class="nav-number">1.</span> <span class="nav-text">使用下列方法之一：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fetch-规范定义了对-CORS-安全的首部字段集合，不得人为设置该集合之外的其他首部字段。该集合为："><span class="nav-number">2.</span> <span class="nav-text">Fetch 规范定义了对 CORS 安全的首部字段集合，不得人为设置该集合之外的其他首部字段。该集合为：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Content-Type-的值仅限于下列三者之一："><span class="nav-number">3.</span> <span class="nav-text">Content-Type 的值仅限于下列三者之一：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用了下面任一-HTTP-方法："><span class="nav-number">4.</span> <span class="nav-text">使用了下面任一 HTTP 方法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#人为设置了对-CORS-安全的首部字段集合之外的其他首部字段。该集合为："><span class="nav-number">5.</span> <span class="nav-text">人为设置了对 CORS 安全的首部字段集合之外的其他首部字段。该集合为：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Content-Type-的值不属于下列之一"><span class="nav-number">6.</span> <span class="nav-text">Content-Type 的值不属于下列之一:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">项志鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

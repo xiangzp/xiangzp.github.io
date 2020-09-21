@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JavaScript高级程序设计,读书笔记," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这一章，我们开始从基本概念开始了解JS这门语言。 基本概念一般来说，我们想要描述一门语言，都要从语法，操作符，数据类型，内置方法等方面来介绍。那么，我们就开始吧。 语法毕竟JS是一个星期就写出来的编程语言，所以在语法上，它大量的借鉴了C以及其他类C语言，比如Java，Perl，的语法。 这也是经常有人问，JavaScript和Java的区别。 套用一句老师说过的话，区别就是雷锋和雷峰塔的区别。 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读JS红皮书-第三章 基本概念">
+<meta property="og:url" content="https://xiangzhipeng.top/2020/01/17/JavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90/3/index.html">
+<meta property="og:site_name" content="项志鹏的博客">
+<meta property="og:description" content="这一章，我们开始从基本概念开始了解JS这门语言。 基本概念一般来说，我们想要描述一门语言，都要从语法，操作符，数据类型，内置方法等方面来介绍。那么，我们就开始吧。 语法毕竟JS是一个星期就写出来的编程语言，所以在语法上，它大量的借鉴了C以及其他类C语言，比如Java，Perl，的语法。 这也是经常有人问，JavaScript和Java的区别。 套用一句老师说过的话，区别就是雷锋和雷峰塔的区别。 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-01-17T02:57:34.000Z">
+<meta property="article:modified_time" content="2020-09-21T11:28:17.640Z">
+<meta property="article:author" content="项志鹏">
+<meta property="article:tag" content="JavaScript高级程序设计">
+<meta property="article:tag" content="读书笔记">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://xiangzhipeng.top/2020/01/17/JavaScript高级程序设计解析/3/"/>
+
+
+
+
+
+  <title>读JS红皮书-第三章 基本概念 | 项志鹏的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?04fcda1257c372a3f251f9471f9a1dfc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">项志鹏的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">山高自有客行路，水深自有渡船人。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-主页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            主页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章归档">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            文章归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-所有标签">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            所有标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            文章分类
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://xiangzhipeng.top/2020/01/17/JavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90/3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="项志鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="项志鹏的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">读JS红皮书-第三章 基本概念</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-17T10:57:34+08:00">
+                2020-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/JavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript高级程序设计</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一章，我们开始从基本概念开始了解JS这门语言。</p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>一般来说，我们想要描述一门语言，都要从语法，操作符，数据类型，内置方法等方面来介绍。那么，我们就开始吧。</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>毕竟JS是一个星期就写出来的编程语言，所以在语法上，它大量的借鉴了C以及其他类C语言，比如Java，Perl，的语法。</p>
+<p>这也是经常有人问，JavaScript和Java的区别。</p>
+<p>套用一句老师说过的话，区别就是雷锋和雷峰塔的区别。</p>
+<h3 id="1-区分大小写"><a href="#1-区分大小写" class="headerlink" title="1.区分大小写"></a>1.区分大小写</h3><p>这个没什么好说的，<code>test</code>和<code>Test</code>不是一个东西。</p>
+<h3 id="2-标识符"><a href="#2-标识符" class="headerlink" title="2.标识符"></a>2.标识符</h3><p>标识符，一般指 变量、函数、属性 的名字，或者函数的参数。命名规则是：</p>
+<ul>
+<li><p>第一个字符必须是 <code>字母(a-zA-Z)</code>、<code>下划线 (_)</code> 、<code>美元符号 ($)</code>其中之一</p>
+</li>
+<li><p>其他字符可以是字母、下划线、美元符号或数字</p>
+</li>
+</ul>
+<h3 id="3-注释"><a href="#3-注释" class="headerlink" title="3.注释"></a>3.注释</h3><ul>
+<li>单行注释： <code>// 注释内容</code></li>
+<li>多行注释：<br>  <code>/** 多行注释 /</code></li>
+</ul>
+<h3 id="4-严格模式"><a href="#4-严格模式" class="headerlink" title="4.严格模式"></a>4.严格模式</h3><p>在脚本顶部第一行添加 <code>&quot;use strict&quot;</code>， 或者在代码体中第一行添加，即可开启。</p>
+<p>ES5时引入的概念，作为一个编译指示，会使JavaScript引擎切换到严格模式。</p>
+<h3 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h3><p>分号和花括号({、})</p>
+<h2 id="关键字和保留字"><a href="#关键字和保留字" class="headerlink" title="关键字和保留字"></a>关键字和保留字</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Reserved_words" target="_blank" rel="noopener">参考 MDN 即可</a></p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>大家都知道ECMAScript的变量是松散类型。也就是只有一个 <code>var</code> 定义所有类型。带来了方便的同时，也带来了麻烦。</p>
+<p>之后推出了 <code>const</code> 和 <code>let</code> ,我们暂且按下不表。</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>ES5中5中基本数据类型： <code>Null</code> , <code>Undefined</code>  ,<code>Boolean</code> , <code>Number</code> , <code>String</code> 。请各位一定要牢记！</p>
+<p>其他的都属于类型 <code>object</code></p>
+<p>当然ES6之后也有其他的基本数据类型： <code>symbol</code> 我们也暂时不说。</p>
+<h3 id="typeof-何许人也"><a href="#typeof-何许人也" class="headerlink" title="typeof 何许人也"></a>typeof 何许人也</h3><p>大家都是 var 定义的，我们怎么区分这些数据类型呢。不要慌，ES提供了 <code>typeof</code> 操作符。</p>
+<p>它有6个返回值：<code>&quot;undefined&quot;</code>，<code>&quot;boolean&quot;</code>，<code>&quot;string&quot;</code>，<code>&quot;number&quot;</code>，<code>&quot;object&quot;</code>，<code>&quot;function&quot;</code> </p>
+<p>举个栗子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> message = <span class="string">"some string"</span>;</span><br><span class="line">alert(<span class="keyword">typeof</span> message); <span class="comment">// "string"</span></span><br><span class="line">alert(<span class="keyword">typeof</span>(message)); <span class="comment">// "string"</span></span><br><span class="line">alert(<span class="keyword">typeof</span> <span class="number">95</span>); <span class="comment">// "number"</span></span><br></pre></td></tr></table></figure>
+
+<p>当然也有很多让人困惑的结果，比如</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 我虽然表示空对象，但是我自己是对象 没想到吧.jpg</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">null</span> <span class="comment">// "object"  </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 我虽然表示不是数字，但是我自己是数字 没想到吧.jpg</span></span><br><span class="line"><span class="keyword">typeof</span> <span class="literal">NaN</span> <span class="comment">// "number" </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 不好意思 js里面没有数组数据类型，我是对象</span></span><br><span class="line"><span class="keyword">typeof</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] <span class="comment">// "object"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// class 是function的语法糖</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span>&#123;&#125;;</span><br><span class="line"><span class="keyword">typeof</span> Foo <span class="comment">// "function"</span></span><br></pre></td></tr></table></figure>
+
+<p>另外要提一嘴的是</p>
+<ul>
+<li><em><code>undefined</code>是派生于的<code>null</code>的</em>，所以规定 <code>null == undefined</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">NaN</span> != <span class="literal">NaN</span></span><br></pre></td></tr></table></figure>
+
+<p>一般来说，对象到字符串的转换经过了如下步骤：</p>
+<ul>
+<li>如果对象有 <code>toString()</code> 则调用</li>
+<li>没有的话调用 <code>valueOf()</code></li>
+<li>如有还是无法获得原始值，则抛出类型错误异常</li>
+</ul>
+<p>一般来说，对象到数字的转换过程中，类似的工作：</p>
+<ul>
+<li>如果对象有 <code>valueOf()</code> </li>
+<li>没有的话调用 <code>toString()</code></li>
+<li>如有还是无法获得原始值，则抛出类型错误异常</li>
+</ul>
+<p>关于双等号引起的类型转换，请看：<br><a href="https://xiangzhipeng.top/2019/08/13/%E5%8F%8C%E7%AD%89%E5%8F%B7%E5%BC%95%E8%B5%B7%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">双等号引起的类型转换</a></p>
+<h2 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h2><h3 id="一元操作符"><a href="#一元操作符" class="headerlink" title="一元操作符"></a>一元操作符</h3><h4 id="递增和递减"><a href="#递增和递减" class="headerlink" title="递增和递减"></a>递增和递减</h4><p>递增和递减操作符直接借鉴自 C，而且各有两个版本：前置型和后置型。</p>
+<p><code>++</code> 和 <code>--</code></p>
+<h4 id="一元加和减操作符"><a href="#一元加和减操作符" class="headerlink" title="一元加和减操作符"></a>一元加和减操作符</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num = <span class="number">25</span>;</span><br><span class="line">num = +num; <span class="comment">// 仍然是 25</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> num = <span class="number">25</span>;</span><br><span class="line">num = -num; <span class="comment">// 变成了-25</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="位操作符"><a href="#位操作符" class="headerlink" title="位操作符"></a>位操作符</h3><blockquote>
+<p>以下内容，平时可能很少用到。记录下来，仅供参考。</p>
+</blockquote>
+<p>有关 <a href="https://xiangzhipeng.top/2019/08/08/JavaScript%E4%B8%AD%E6%95%B0%E5%80%BC%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AD%98%E5%82%A8%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%A1%A5%E7%A0%81/">JavaScript中数值的二进制存储和二进制补码</a><br>可以点击连接查看。</p>
+<h4 id="按位非"><a href="#按位非" class="headerlink" title="按位非 ~"></a>按位非 ~</h4><p>返回数值的反码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num1 = <span class="number">25</span>; <span class="comment">// 二进制 00000000000000000000000000011001</span></span><br><span class="line"><span class="keyword">var</span> num2 = ~num1; <span class="comment">// 二进制 11111111111111111111111111100110</span></span><br><span class="line"><span class="comment">// 类似于</span></span><br><span class="line"><span class="comment">// var num2 = -num1 - 1</span></span><br><span class="line">alert(num2); <span class="comment">// -26</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="按位与-amp"><a href="#按位与-amp" class="headerlink" title="按位与 &amp;"></a>按位与 &amp;</h4><p>从本质上讲，按位与操作就是将两个数值的每一位对齐，然后根据下表中的规则，对相同位置上的两个数执行 AND 操作：</p>
+<table>
+  <tr>
+    <td>第一位</td>
+    <td>第二位</td>
+    <td>结果</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>1</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+</table>
+
+<p>栗子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = <span class="number">25</span> &amp; <span class="number">3</span>;</span><br><span class="line">alert(result); <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">25 &#x3D;  0000 0000 0000 0000 0000 0000 0001 1001</span><br><span class="line">3 &#x3D;   0000 0000 0000 0000 0000 0000 0000 0011</span><br><span class="line">---------------------------------------------</span><br><span class="line">AND &#x3D; 0000 0000 0000 0000 0000 0000 0000 0001</span><br></pre></td></tr></table></figure>
+
+<h4 id="按位或"><a href="#按位或" class="headerlink" title="按位或 |"></a>按位或 |</h4><p>与按位与类似，按位或也有两个操作数，并按照一定的规则：</p>
+<table>
+  <tr>
+    <td>第一位</td>
+    <td>第二位</td>
+    <td>结果</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>0</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+</table>
+
+<p>栗子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = <span class="number">25</span> | <span class="number">3</span>;</span><br><span class="line">alert(result); <span class="comment">//27</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">25</span> = <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0001</span> <span class="number">1001</span></span><br><span class="line"><span class="number">3</span> =  <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0011</span></span><br><span class="line">--------------------------------------------</span><br><span class="line">OR = <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0001</span> <span class="number">1011</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="按位异或"><a href="#按位异或" class="headerlink" title="按位异或 ^"></a>按位异或 ^</h4><p>同样，按位异或也有规则</p>
+<table>
+  <tr>
+    <td>第一位</td>
+    <td>第二位</td>
+    <td>结果</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>1</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>0</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>1</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+</table>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = <span class="number">25</span> ^ <span class="number">3</span>;</span><br><span class="line">alert(result); <span class="comment">//26</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">25</span> =  <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0001</span> <span class="number">1001</span></span><br><span class="line"><span class="number">3</span> =   <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0011</span></span><br><span class="line">---------------------------------------------</span><br><span class="line">XOR = <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0001</span> <span class="number">1010</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="左移-lt-lt"><a href="#左移-lt-lt" class="headerlink" title="左移 &lt;&lt;"></a>左移 &lt;&lt;</h4><p>这个操作符会将数值的所有位向左移动指定的位数,不影响符号位</p>
+<h4 id="有符号右移-gt-gt"><a href="#有符号右移-gt-gt" class="headerlink" title="有符号右移 &gt;&gt;"></a>有符号右移 &gt;&gt;</h4><p>这个操作符会将数值向右移动，但保留符号位（即正负号标记）</p>
+<h4 id="无符号右移-gt-gt-gt"><a href="#无符号右移-gt-gt-gt" class="headerlink" title="无符号右移 &gt;&gt;&gt;"></a>无符号右移 &gt;&gt;&gt;</h4><p>这个操作符会将数值的所有 32 位都向右移动。</p>
+<blockquote>
+<p>想要具体了解的可以去Google一下</p>
+</blockquote>
+<h3 id="布尔操作符"><a href="#布尔操作符" class="headerlink" title="布尔操作符"></a>布尔操作符</h3><h4 id="逻辑非"><a href="#逻辑非" class="headerlink" title="逻辑非 !"></a>逻辑非 !</h4><p>返回一个布尔值。举个栗子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">alert(!<span class="literal">false</span>); <span class="comment">// true</span></span><br><span class="line">alert(!<span class="string">"blue"</span>); <span class="comment">// false</span></span><br><span class="line">alert(!<span class="number">0</span>); <span class="comment">// true</span></span><br><span class="line">alert(!<span class="literal">NaN</span>); <span class="comment">// true</span></span><br><span class="line">alert(!<span class="string">""</span>); <span class="comment">// true</span></span><br><span class="line">alert(!<span class="number">12345</span>); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="逻辑与-amp-amp"><a href="#逻辑与-amp-amp" class="headerlink" title="逻辑与 &amp;&amp;"></a>逻辑与 &amp;&amp;</h4><table>
+  <tr>
+    <td>第一位</td>
+    <td>第二位</td>
+    <td>结果</td>
+  </tr>
+  <tr>
+    <td>true</td>
+    <td>true</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>true</td>
+    <td>false</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>true</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>false</td>
+    <td>false</td>
+  </tr>
+</table>
+
+
+
+<h4 id="逻辑或"><a href="#逻辑或" class="headerlink" title="逻辑或 ||"></a>逻辑或 ||</h4><table>
+  <tr>
+    <td>第一位</td>
+    <td>第二位</td>
+    <td>结果</td>
+  </tr>
+  <tr>
+    <td>true</td>
+    <td>true</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>true</td>
+    <td>false</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>true</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>false</td>
+    <td>false</td>
+  </tr>
+</table>
+
+<h3 id="加减乘除"><a href="#加减乘除" class="headerlink" title="加减乘除"></a>加减乘除</h3><p>不做进一步说明，同数学计算，只是做一定的类型转换。</p>
+<p>重点关注 正负的2^32的临界值</p>
+<h3 id="关系操作符"><a href="#关系操作符" class="headerlink" title="关系操作符"></a>关系操作符</h3><p>小于（ &lt;）、大于（ &gt;）、小于等于（ &lt;=）和大于等于（ &gt;=）</p>
+<h3 id="相等操作符"><a href="#相等操作符" class="headerlink" title="相等操作符"></a>相等操作符</h3><h4 id="双等号操作符"><a href="#双等号操作符" class="headerlink" title="双等号操作符"></a>双等号操作符</h4><p>参考<a href="https://xiangzhipeng.top/2019/08/13/%E5%8F%8C%E7%AD%89%E5%8F%B7%E5%BC%95%E8%B5%B7%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">双等号引起的类型转换</a></p>
+<h4 id="三等号操作符"><a href="#三等号操作符" class="headerlink" title="三等号操作符"></a>三等号操作符</h4><p>忽略类型，比较原始的值</p>
+<h2 id="语句-1"><a href="#语句-1" class="headerlink" title="语句"></a>语句</h2><h3 id="if-语句"><a href="#if-语句" class="headerlink" title="if 语句"></a>if 语句</h3><h3 id="do-while语句"><a href="#do-while语句" class="headerlink" title="do-while语句"></a>do-while语句</h3><h3 id="while语句"><a href="#while语句" class="headerlink" title="while语句"></a>while语句</h3><h3 id="for语句"><a href="#for语句" class="headerlink" title="for语句"></a>for语句</h3><h3 id="for-in语句"><a href="#for-in语句" class="headerlink" title="for-in语句"></a>for-in语句</h3><h3 id="switch语句"><a href="#switch语句" class="headerlink" title="switch语句"></a>switch语句</h3><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>函数对任何语言来说都是一个核心的概念。通过函数可以封装任意多条语句，而且可以在任何地方、任何时候调用执行。 ECMAScript 中的函数使用 function 关键字来声明，后跟一组参数以及函数体。</p>
+<p>没有重载</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" rel="tag"># JavaScript高级程序设计</a>
+          
+            <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/17/JavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90/2/" rel="next" title="读JS红皮书-第二章 在HTML中使用JavaScript">
+                <i class="fa fa-chevron-left"></i> 读JS红皮书-第二章 在HTML中使用JavaScript
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/18/JavaScript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90/4/" rel="prev" title="读JS红皮书-第四章 变量、作用域和内存问题">
+                读JS红皮书-第四章 变量、作用域和内存问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">项志鹏</p>
+              <p class="site-description motion-element" itemprop="description">欢迎来到项志鹏的个人博客。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">179</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语法"><span class="nav-number">1.1.</span> <span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-区分大小写"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.区分大小写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-标识符"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.标识符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-注释"><span class="nav-number">1.1.3.</span> <span class="nav-text">3.注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-严格模式"><span class="nav-number">1.1.4.</span> <span class="nav-text">4.严格模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语句"><span class="nav-number">1.1.5.</span> <span class="nav-text">语句</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关键字和保留字"><span class="nav-number">1.2.</span> <span class="nav-text">关键字和保留字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">1.3.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型"><span class="nav-number">1.4.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#typeof-何许人也"><span class="nav-number">1.4.1.</span> <span class="nav-text">typeof 何许人也</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作符"><span class="nav-number">1.5.</span> <span class="nav-text">操作符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一元操作符"><span class="nav-number">1.5.1.</span> <span class="nav-text">一元操作符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#递增和递减"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">递增和递减</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一元加和减操作符"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">一元加和减操作符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位操作符"><span class="nav-number">1.5.2.</span> <span class="nav-text">位操作符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#按位非"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">按位非 ~</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#按位与-amp"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">按位与 &amp;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#按位或"><span class="nav-number">1.5.2.3.</span> <span class="nav-text">按位或 |</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#按位异或"><span class="nav-number">1.5.2.4.</span> <span class="nav-text">按位异或 ^</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#左移-lt-lt"><span class="nav-number">1.5.2.5.</span> <span class="nav-text">左移 &lt;&lt;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有符号右移-gt-gt"><span class="nav-number">1.5.2.6.</span> <span class="nav-text">有符号右移 &gt;&gt;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#无符号右移-gt-gt-gt"><span class="nav-number">1.5.2.7.</span> <span class="nav-text">无符号右移 &gt;&gt;&gt;</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#布尔操作符"><span class="nav-number">1.5.3.</span> <span class="nav-text">布尔操作符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#逻辑非"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">逻辑非 !</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#逻辑与-amp-amp"><span class="nav-number">1.5.3.2.</span> <span class="nav-text">逻辑与 &amp;&amp;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#逻辑或"><span class="nav-number">1.5.3.3.</span> <span class="nav-text">逻辑或 ||</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加减乘除"><span class="nav-number">1.5.4.</span> <span class="nav-text">加减乘除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关系操作符"><span class="nav-number">1.5.5.</span> <span class="nav-text">关系操作符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相等操作符"><span class="nav-number">1.5.6.</span> <span class="nav-text">相等操作符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#双等号操作符"><span class="nav-number">1.5.6.1.</span> <span class="nav-text">双等号操作符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三等号操作符"><span class="nav-number">1.5.6.2.</span> <span class="nav-text">三等号操作符</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语句-1"><span class="nav-number">1.6.</span> <span class="nav-text">语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#if-语句"><span class="nav-number">1.6.1.</span> <span class="nav-text">if 语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#do-while语句"><span class="nav-number">1.6.2.</span> <span class="nav-text">do-while语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#while语句"><span class="nav-number">1.6.3.</span> <span class="nav-text">while语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#for语句"><span class="nav-number">1.6.4.</span> <span class="nav-text">for语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#for-in语句"><span class="nav-number">1.6.5.</span> <span class="nav-text">for-in语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#switch语句"><span class="nav-number">1.6.6.</span> <span class="nav-text">switch语句</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">1.7.</span> <span class="nav-text">函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">项志鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JavaScript基础,继承," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="对象和继承红皮书在第6章重点介绍了面向对象的程序设计。在JavaScript中没有类的概念，对于ECMAScript来说，对象基于一个引用类型创建。 在第一小节，详细介绍了对象的创建方式，其实对后面所说的继承有很大的帮助。比如Object.defineProperty，工厂模式，构造模式，原型模式等等，都是继承的基础。略去不表。 我们着重来看一下继承。 第二节循序渐进的介绍了继承，以及从各种创建对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读红皮书，总结一下JavaScript中的继承">
+<meta property="og:url" content="https://xiangzhipeng.top/2020/04/23/%E8%AF%BB%E7%BA%A2%E7%9A%AE%E4%B9%A6%EF%BC%8C%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8BJavaScript%E4%B8%AD%E7%9A%84%E7%BB%A7%E6%89%BF/index.html">
+<meta property="og:site_name" content="项志鹏的博客">
+<meta property="og:description" content="对象和继承红皮书在第6章重点介绍了面向对象的程序设计。在JavaScript中没有类的概念，对于ECMAScript来说，对象基于一个引用类型创建。 在第一小节，详细介绍了对象的创建方式，其实对后面所说的继承有很大的帮助。比如Object.defineProperty，工厂模式，构造模式，原型模式等等，都是继承的基础。略去不表。 我们着重来看一下继承。 第二节循序渐进的介绍了继承，以及从各种创建对">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-23T03:05:06.000Z">
+<meta property="article:modified_time" content="2020-09-21T11:28:17.719Z">
+<meta property="article:author" content="项志鹏">
+<meta property="article:tag" content="JavaScript基础">
+<meta property="article:tag" content="继承">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://xiangzhipeng.top/2020/04/23/读红皮书，总结一下JavaScript中的继承/"/>
+
+
+
+
+
+  <title>读红皮书，总结一下JavaScript中的继承 | 项志鹏的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?04fcda1257c372a3f251f9471f9a1dfc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">项志鹏的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">山高自有客行路，水深自有渡船人。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-主页">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            主页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章归档">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            文章归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-所有标签">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            所有标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-文章分类">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            文章分类
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://xiangzhipeng.top/2020/04/23/%E8%AF%BB%E7%BA%A2%E7%9A%AE%E4%B9%A6%EF%BC%8C%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8BJavaScript%E4%B8%AD%E7%9A%84%E7%BB%A7%E6%89%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="项志鹏">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="项志鹏的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">读红皮书，总结一下JavaScript中的继承</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-23T11:05:06+08:00">
+                2020-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="对象和继承"><a href="#对象和继承" class="headerlink" title="对象和继承"></a>对象和继承</h2><p>红皮书在第6章重点介绍了<code>面向对象的程序设计</code>。在JavaScript中没有类的概念，对于ECMAScript来说，对象基于一个引用类型创建。</p>
+<p>在第一小节，详细介绍了对象的创建方式，其实对后面所说的继承有很大的帮助。比如Object.defineProperty，工厂模式，构造模式，原型模式等等，都是继承的基础。略去不表。</p>
+<p>我们着重来看一下继承。</p>
+<p>第二节循序渐进的介绍了继承，以及从各种创建对象的方式上来对继承方式进行划分。</p>
+<h2 id="继承的种类"><a href="#继承的种类" class="headerlink" title="继承的种类"></a>继承的种类</h2><ul>
+<li>原型链继承</li>
+<li>构造继承</li>
+<li>组合继承</li>
+<li>原型继承</li>
+<li>寄生继承</li>
+<li>寄生组合继承</li>
+</ul>
+<h2 id="原型链继承"><a href="#原型链继承" class="headerlink" title="原型链继承"></a>原型链继承</h2><p>缺点：</p>
+<ul>
+<li>只能统一在给Child的原型赋值时调用父类的构造方法。也就意味着，Child的实例在创建时无法传递参数。new Child(args) args 不能作用在父类上</li>
+<li>Parent的构造属性会因为new关键词变成Child的原型属性。那么会导致所有的实例共享该属性。如果该属性是引用类型，比如数组，那么一个实例修改了属性，所有的实例的该属性都会变化</li>
+</ul>
+<p>重点代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Child.prototype = <span class="keyword">new</span> Parent(<span class="number">30</span>)</span><br></pre></td></tr></table></figure>
+
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原型链继承</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params">age</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">'父亲'</span></span><br><span class="line">    <span class="keyword">this</span>.relations = [<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>]</span><br><span class="line">    <span class="keyword">this</span>.age = age</span><br><span class="line">  &#125;</span><br><span class="line">  Parent.prototype.age = <span class="number">30</span></span><br><span class="line">  Parent.prototype.getName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">'儿子'</span></span><br><span class="line">  &#125;</span><br><span class="line">  Child.prototype = <span class="keyword">new</span> Parent(<span class="number">30</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 缺点：只能统一在给Child的原型赋值时调用父类的构造方法</span></span><br><span class="line">  <span class="comment">// 也就意味着，Child的实例在创建时无法传递参数</span></span><br><span class="line">  <span class="comment">// new Child(args) args 不能作用在父类上</span></span><br><span class="line">  <span class="keyword">let</span> child = <span class="keyword">new</span> Child()</span><br><span class="line">  <span class="comment">// 缺点：Parent的构造属性会因为new关键词变成Child的原型属性</span></span><br><span class="line">  <span class="comment">// 那么会导致所有的实例共享该属性</span></span><br><span class="line">  <span class="comment">// 如果该属性是引用类型，比如数组，那么一个实例修改了属性 所有的实例的该属性都会变化</span></span><br><span class="line">  child.relations.push(<span class="string">'4'</span>)</span><br><span class="line">  </span><br><span class="line">  child.getName() <span class="comment">// '儿子'</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">new</span> Child().relations) <span class="comment">// ["1", "2", "3", "4"]</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">new</span> Child().relations === <span class="keyword">new</span> Child().__proto__.relations) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="借用构造函数继承（伪造对象、经典继承）"><a href="#借用构造函数继承（伪造对象、经典继承）" class="headerlink" title="借用构造函数继承（伪造对象、经典继承）"></a>借用构造函数继承（伪造对象、经典继承）</h2><p>缺点：方法不能得到重用，每创建一个实例则创建一个方法</p>
+<p>优势：</p>
+<ul>
+<li>可以像构造函数传递参数，生成不同的子类实例</li>
+<li>在子类构造函数执行时，用子类的对象执行父类的构造方法，在子类中创建了属性的副本。该副本不受引用类型影响，解决了原型方法这方面的问题</li>
+</ul>
+<p>重点代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 借用构造函数继承（伪造对象、经典继承）</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">  <span class="keyword">this</span>.colors = [<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>]</span><br><span class="line">  <span class="comment">// 缺点：方法不能得到重用，每创建一个实例则创建一个方法</span></span><br><span class="line">  <span class="keyword">this</span>.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> child = <span class="keyword">new</span> Child(<span class="string">'x'</span>, <span class="number">10</span>)</span><br><span class="line">child.colors.push(<span class="string">'4'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(child.name) <span class="comment">// x</span></span><br><span class="line"><span class="built_in">console</span>.log(child.colors) <span class="comment">// ["1", "2", "3", "4"]</span></span><br><span class="line">child.getName() <span class="comment">// x</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 优势：1. 可以像构造函数传递参数，生成不同的子类实例</span></span><br><span class="line"><span class="comment">// 2. 在子类构造函数执行时，用子类的对象执行父类的构造方法，在子类中创建了属性的副本</span></span><br><span class="line"><span class="comment">// 该副本不受引用类型影响，解决了原型方法这方面的问题</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> Child(<span class="string">'y'</span>).colors) <span class="comment">// ["1", "2", "3"]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="组合继承"><a href="#组合继承" class="headerlink" title="组合继承"></a>组合继承</h2><p>结合了原型链继承和构造继承的优点，是最受欢迎的继承方法。</p>
+<p>优点:</p>
+<ul>
+<li>利用构造继承的原理，解决了引用类型的问题</li>
+<li>利用了原型方法作为引用类型可以复用的问题,也修改了Child原型的构造函数指向问题</li>
+</ul>
+<p>缺点：两次执行了父类构造函数</p>
+<p>重点代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Child.prototype = <span class="keyword">new</span> Parent()</span><br><span class="line">Child.prototype.constructor = Child</span><br></pre></td></tr></table></figure>
+
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 组合继承</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">  <span class="keyword">this</span>.colors = [<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>]</span><br><span class="line">&#125;</span><br><span class="line">Parent.prototype.getName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 第 2 次调用Parent</span></span><br><span class="line">  <span class="comment">// 缺点: 多次调用了父类的构造函数</span></span><br><span class="line">  Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第 1 次调用Parent</span></span><br><span class="line"><span class="comment">// 缺点: 多次调用了父类的构造函数</span></span><br><span class="line">Child.prototype = <span class="keyword">new</span> Parent()</span><br><span class="line"><span class="comment">// 优势：完成了原型方法作为引用类型可以复用的问题</span></span><br><span class="line"><span class="comment">// 也修改了Child原型的构造函数指向问题</span></span><br><span class="line">Child.prototype.constructor = Child</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> child = <span class="keyword">new</span> Child(<span class="string">'x'</span>, <span class="number">1</span>)</span><br><span class="line">child.colors.push(<span class="string">'4'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(child.name) <span class="comment">// x</span></span><br><span class="line"><span class="built_in">console</span>.log(child.getName()) <span class="comment">// x</span></span><br><span class="line"><span class="built_in">console</span>.log(child.colors) <span class="comment">// ["1", "2", "3", "4"]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> child2 = <span class="keyword">new</span> Child(<span class="string">'y'</span>, <span class="number">22</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优势： 利用构造继承的原理，解决了引用类型的问题</span></span><br><span class="line"><span class="built_in">console</span>.log(child2.colors) <span class="comment">// ["1", "2", "3"]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="原型式继承"><a href="#原型式继承" class="headerlink" title="原型式继承"></a>原型式继承</h2><p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原型式继承</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span> (<span class="params">o</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">  F.prototype = o</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> parent = &#123;</span><br><span class="line">  a: <span class="number">1</span>,</span><br><span class="line">  b: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优势：只用来让对象保持一致的情况下使用，简单方便</span></span><br><span class="line"><span class="comment">// 缺点：和原型链继承一样，无法修改引用类型</span></span><br><span class="line"><span class="comment">// 无法用类型检查等类操作</span></span><br><span class="line"><span class="keyword">var</span> child = object(parent)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(child.a) <span class="comment">// 1</span></span><br><span class="line">child.b.push(<span class="number">4</span>)</span><br><span class="line"><span class="built_in">console</span>.log(parent.b) <span class="comment">// [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="寄生继承"><a href="#寄生继承" class="headerlink" title="寄生继承"></a>寄生继承</h2><p>所谓的 <code>寄生</code>，在我理解看来则是，看起来创建了一个新的对象，实际上它的属性都依赖于传入的对象，并不归自己所有。在此基础上，设置了自己的属性，并把属于自己的和不属于的一股脑都告诉别人，这便是一种寄生，寄生于传入的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 寄生继承</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span> (<span class="params">o</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">  F.prototype = o</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createAnother</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> clone = object(o)</span><br><span class="line">  clone.c = <span class="number">3</span></span><br><span class="line">  <span class="keyword">return</span> clone</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> parent = &#123;</span><br><span class="line">  a: <span class="number">1</span>,</span><br><span class="line">  b: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优势：只用来让对象保持一致的情况下使用，简单方便</span></span><br><span class="line"><span class="comment">// 缺点：和原型链继承一样，无法修改引用类型</span></span><br><span class="line"><span class="comment">// 无法用类型检查等类操作</span></span><br><span class="line"><span class="keyword">var</span> child = createAnother(parent)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(child.a) <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(child.c) <span class="comment">// 3</span></span><br><span class="line">child.b.push(<span class="number">4</span>)</span><br><span class="line"><span class="built_in">console</span>.log(parent.b) <span class="comment">// [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="寄生组合继承"><a href="#寄生组合继承" class="headerlink" title="寄生组合继承"></a>寄生组合继承</h2><p>结合了原型和寄生的优点，利用了组合继承，把第一次用new执行父类构造函数体替换为对对象的原型复制的方法</p>
+<p><strong>只复制了父类原型上的引用类型，而抛弃了的构造属性则通过构造继承的方式获取。</strong></p>
+<p>这样便是 <strong>最理想的继承范式</strong></p>
+<p>重点代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">inheritPrototype(Parent, Child)</span><br></pre></td></tr></table></figure>
+
+<p>实现代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 寄生组合继承</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Parent</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.age = age</span><br><span class="line">  <span class="keyword">this</span>.colors = [<span class="string">'1'</span>, <span class="string">'2'</span>, <span class="string">'3'</span>]</span><br><span class="line">&#125;</span><br><span class="line">Parent.prototype.getName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Child</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 第 2 次调用Parent</span></span><br><span class="line">  <span class="comment">// 缺点: 多次调用了父类的构造函数</span></span><br><span class="line">  Parent.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span> (<span class="params">o</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">  F.prototype = o</span><br><span class="line">  <span class="comment">// new 关键词操作后 范围一个对象</span></span><br><span class="line">  <span class="comment">// constructor 丢失</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> F() <span class="comment">// &#123; __proto__: Parent.prototype &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span> (<span class="params">Parent, Child</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 父类的原型对象中，只包含了方法等引用对象，而不包含构造函数内的属性 name, age, colors这些属性</span></span><br><span class="line">  <span class="comment">// 故 节省了子类继承后 由于构造继承生成的构造属性</span></span><br><span class="line">  <span class="keyword">let</span> _prototype = object(Parent.prototype) </span><br><span class="line">  _prototype.constructor = Child</span><br><span class="line">  Child.prototype = _prototype <span class="comment">// &#123; __proto__: Parent.prototype，constructor: Child &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 利用了寄生继承的原理</span></span><br><span class="line"><span class="comment">// 生成了一个原型对象，他的原型指向父类的原型对象，构造函数指向子类构造函数</span></span><br><span class="line"><span class="comment">// 并将该构造函数赋值给子类的原型对象</span></span><br><span class="line">inheritPrototype(Parent, Child)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> child = <span class="keyword">new</span> Child(<span class="string">'x'</span>, <span class="number">1</span>)</span><br><span class="line">child.colors.push(<span class="string">'4'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(child.name) <span class="comment">// x</span></span><br><span class="line"><span class="built_in">console</span>.log(child.getName()) <span class="comment">// x</span></span><br><span class="line"><span class="built_in">console</span>.log(child.colors) <span class="comment">// ["1", "2", "3", "4"]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> child2 = <span class="keyword">new</span> Child(<span class="string">'y'</span>, <span class="number">22</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优势： 利用构造继承的原理，解决了引用类型的问题</span></span><br><span class="line"><span class="built_in">console</span>.log(child2.colors) <span class="comment">// ["1", "2", "3"]</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript%E5%9F%BA%E7%A1%80/" rel="tag"># JavaScript基础</a>
+          
+            <a href="/tags/%E7%BB%A7%E6%89%BF/" rel="tag"># 继承</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/21/JavaScript%E4%B8%AD%E7%9A%84%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97/" rel="next" title="JavaScript中的同步异步和任务队列">
+                <i class="fa fa-chevron-left"></i> JavaScript中的同步异步和任务队列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">项志鹏</p>
+              <p class="site-description motion-element" itemprop="description">欢迎来到项志鹏的个人博客。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">179</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#对象和继承"><span class="nav-number">1.</span> <span class="nav-text">对象和继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承的种类"><span class="nav-number">2.</span> <span class="nav-text">继承的种类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型链继承"><span class="nav-number">3.</span> <span class="nav-text">原型链继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#借用构造函数继承（伪造对象、经典继承）"><span class="nav-number">4.</span> <span class="nav-text">借用构造函数继承（伪造对象、经典继承）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合继承"><span class="nav-number">5.</span> <span class="nav-text">组合继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型式继承"><span class="nav-number">6.</span> <span class="nav-text">原型式继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寄生继承"><span class="nav-number">7.</span> <span class="nav-text">寄生继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寄生组合继承"><span class="nav-number">8.</span> <span class="nav-text">寄生组合继承</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">项志鹏</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
